@@ -112,6 +112,7 @@ class BarangMasukController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * ini belum 100% fixed, skip dulu karena waktu nya mepet, mungkin after akan saya perbaiki.
      *
      * @param Request $request
      * @param int     $id
@@ -156,7 +157,7 @@ class BarangMasukController extends Controller
             // isi dengan nama folder tempat kemana file diupload
             $tujuan_upload = 'a930f5a435d7dfacf3ab12e3b5539cbf1c1ad81d'; //sha1 dari faktur_images
             $file->move($tujuan_upload, $nama_file);
-            unlink(public_path() . $tujuan_upload . $barang_masuk->resi_img;
+            unlink(public_path() . $tujuan_upload . $barang_masuk->resi_img);
         }
 
 

@@ -1,13 +1,20 @@
+### default credentials:
+
+- admin: admin@gmail.com | admin
+- gudang: gudang@gmail.com | gudang
+
 ## How to install
 
-1. Clone the repository
-2. Run `composer install`
-3. setup your environment variables
-4. Run `php artisan jwt:secret`
-5. Run `php artisan migrate --seed`
-6. Run `php artisan serve`
-7. For API Documentation, click the button below.
-8. [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/14533445-8420cef4-fed2-4897-8868-2183516f9665?action=collection%2Ffork&collection-url=entityId%3D14533445-8420cef4-fed2-4897-8868-2183516f9665%26entityType%3Dcollection%26workspaceId%3D08a1005f-3f98-4048-b3cb-ec77bef8d7dd)
+1. Jika mengalami kendala, silahkan hubungi developer.
+2. Clone the repository
+3. Run `composer install`
+4. setup your environment variables
+5. Run `php artisan jwt:secret`
+6. Run `php artisan migrate --seed`
+7. Run `php artisan serve`
+8. For API Documentation, click the button below.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/14533445-8420cef4-fed2-4897-8868-2183516f9665?action=collection%2Ffork&collection-url=entityId%3D14533445-8420cef4-fed2-4897-8868-2183516f9665%26entityType%3Dcollection%26workspaceId%3D08a1005f-3f98-4048-b3cb-ec77bef8d7dd)
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
