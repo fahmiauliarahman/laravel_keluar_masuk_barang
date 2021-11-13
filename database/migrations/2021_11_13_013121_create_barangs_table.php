@@ -17,10 +17,12 @@ class CreateBarangsTable extends Migration
             $table->id();
             $table->string('kode_barang')->unique();
             $table->string('nama_barang');
-            $table->integer('kategori_id');
+            $table->unsignedBigInteger('kategori_id');
             $table->integer('stok')->default(0);
             $table->string('keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
         });
     }
 
