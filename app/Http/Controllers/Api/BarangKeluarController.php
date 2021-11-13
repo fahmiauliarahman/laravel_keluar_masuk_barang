@@ -33,7 +33,7 @@ class BarangKeluarController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $filter = $request->only('kepada', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
+        $filter = $request->only('kepada', 'no_faktur', 'resi_img', 'barang_id', 'jumlah', 'tanggal');
 
         if (count($request->input('barang_id')) !== count($request->input('jumlah'))) {
             return ResponseFormatter::error('Tipe barang dan jumlah barang tidak sama');
@@ -42,6 +42,7 @@ class BarangKeluarController extends Controller
         $validator = Validator::make($filter, [
             'kepada' => 'required',
             'no_faktur' => 'required',
+            'tanggal' => 'required|date_format:Y-m-d',
             'resi_img' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
             "barang_id" => "required|array",
             "barang_id.*" => "required|exists:barang,id",
@@ -67,6 +68,7 @@ class BarangKeluarController extends Controller
             'kepada' => $filter['kepada'],
             'no_faktur' => $filter['no_faktur'],
             'resi_img' => $nama_file,
+            'tanggal' => $filter['tanggal'],
         ]);
 
         for ($i = 0; $i < count($request->input('barang_id')); $i++) {
@@ -131,6 +133,7 @@ class BarangKeluarController extends Controller
         $validator = Validator::make($filter, [
             'kepada' => 'required',
             'no_faktur' => 'required',
+            'tanggal' => 'required|date_format:Y-m-d',
             'resi_img' => 'file|image|mimes:jpeg,png,jpg|max:2048',
             "barang_id" => "required|array",
             "barang_id.*" => "required|exists:barang,id",
@@ -146,6 +149,7 @@ class BarangKeluarController extends Controller
         $to_be_updated = [
             'kepada' => $filter['kepada'],
             'no_faktur' => $filter['no_faktur'],
+            'tanggal' => $filter['tanggal'],
         ];
 
 

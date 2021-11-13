@@ -18,6 +18,7 @@ class CreateBarangKeluarsTable extends Migration
             $table->string('kepada')->nullable();
             $table->string('no_faktur')->nullable();
             $table->string('resi_img')->nullable();
+            $table->string('tanggal')->nullable();
             $table->timestamps();
         });
     }

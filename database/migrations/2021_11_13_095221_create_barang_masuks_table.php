@@ -18,6 +18,7 @@ class CreateBarangMasuksTable extends Migration
             $table->string('dari')->nullable();
             $table->string('no_faktur')->nullable();
             $table->string('resi_img')->nullable();
+            $table->string('tanggal')->nullable();
             $table->timestamps();
         });
     }
