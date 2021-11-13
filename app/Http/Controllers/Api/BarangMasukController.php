@@ -124,9 +124,7 @@ class BarangMasukController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $barang_masuk = BarangMasuk::findOrFail($id);
-        $filter = $request->only('dari', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
-
-        return ResponseFormatter::success($filter);
+        $filter = $request->only('dari', 'no_faktur', 'resi_img', 'barang_id', 'jumlah', 'tanggal');
 
         if (count($request->input('barang_id')) !== count($request->input('jumlah'))) {
             return ResponseFormatter::error('Tipe barang dan jumlah barang tidak sama');
