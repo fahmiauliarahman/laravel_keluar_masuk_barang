@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'has_role:1'], function () {
             Route::post('laporan', 'Api\LaporanController@report')->name('reporting');
+            Route::post('stok', 'Api\LaporanController@stok')->name('stok');
             Route::resource('kategori', 'Api\KategoriController')->except(['create', 'edit', 'index']);
             Route::resource('barang', 'Api\BarangController')->except(['create', 'edit', 'index']);
         });
