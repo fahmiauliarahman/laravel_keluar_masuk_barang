@@ -33,7 +33,7 @@ class BarangController extends Controller
     {
         $filter = $request->only('kode_barang', 'nama_barang', 'kategori_id', 'stok', 'keterangan');
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($filter, [
             'kode_barang' => 'required|unique:barang',
             'nama_barang' => 'required|string',
             'kategori_id' => 'required|exists:kategori,id',
@@ -75,7 +75,7 @@ class BarangController extends Controller
     {
         $filter = $request->only('kode_barang', 'nama_barang', 'kategori_id', 'stok', 'keterangan');
         $barang = Barang::findOrFail($id);
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($filter, [
             'kode_barang' => 'required|unique:barang,kode_barang,' . $id,
             'nama_barang' => 'required|string',
             'kategori_id' => 'required|exists:kategori,id',

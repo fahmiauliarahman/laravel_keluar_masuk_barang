@@ -21,5 +21,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('me', 'Api\AuthController@me');
         Route::resource('kategori', 'Api\KategoriController')->except(['create', 'edit']);
         Route::resource('barang', 'Api\BarangController')->except(['create', 'edit']);
+        Route::group(['middleware' => 'has_role:1'], function () {
+        });
+        Route::group(['middleware' => 'has_role:2'], function () {
+            Route::resource('barang_masuk', 'Api\BarangMasukController')->except(['create', 'edit']);
+        });
     });
 });

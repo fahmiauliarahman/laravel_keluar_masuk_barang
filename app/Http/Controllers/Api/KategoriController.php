@@ -34,7 +34,7 @@ class KategoriController extends Controller
     {
         $filter = $request->only('nama');
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($filter, [
             'nama' => 'required',
         ]);
 
@@ -73,7 +73,7 @@ class KategoriController extends Controller
     {
         $filter = $request->only('nama');
         $kategori = Kategori::findOrFail($id);
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($filter, [
             'nama' => 'required',
         ]);
 

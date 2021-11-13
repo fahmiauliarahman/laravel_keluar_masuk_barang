@@ -30,7 +30,6 @@ class AuthController extends Controller
     public function me()
     {
         try {
-
             if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return ResponseFormatter::error(NULL, 400, 'User not found');
             }
