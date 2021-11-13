@@ -13,7 +13,8 @@
 6. Run `php artisan jwt:secret`
 7. Run `php artisan migrate --seed`
 8. Run `php artisan serve`
-9. For API Documentation, click the button below.
+9. For API Documentation, click the button below (In postman, you don't need to copy and paste the token when
+   successfully logged in because its already set on the postman automatically).
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/14533445-8420cef4-fed2-4897-8868-2183516f9665?action=collection%2Ffork&collection-url=entityId%3D14533445-8420cef4-fed2-4897-8868-2183516f9665%26entityType%3Dcollection%26workspaceId%3D08a1005f-3f98-4048-b3cb-ec77bef8d7dd)
 
