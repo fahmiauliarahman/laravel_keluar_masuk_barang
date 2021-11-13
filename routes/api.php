@@ -19,6 +19,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => 'jwt.verify'], function () {
         Route::post('logout', 'Api\AuthController@logout');
         Route::post('me', 'Api\AuthController@me');
+        Route::resource('kategori', 'Api\KategoriController')->except(['create', 'edit']);
         Route::resource('barang', 'Api\BarangController')->except(['create', 'edit']);
     });
 });
