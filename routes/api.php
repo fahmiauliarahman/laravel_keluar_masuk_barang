@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
         Route::group(['middleware' => 'has_role:2'], function () {
             Route::resource('barang_masuk', 'Api\BarangMasukController')->except(['create', 'edit']);
+            Route::resource('barang_keluar', 'Api\BarangKeluarController')->except(['create', 'edit']);
         });
     });
 });

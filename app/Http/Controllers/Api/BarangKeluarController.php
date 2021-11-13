@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Barang;
-use App\BarangMasukDetail;
+use App\BarangKeluar;
+use App\BarangKeluarDetail;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\BarangMasuk;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class BarangMasukController extends Controller
+class BarangKeluarController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,8 +20,8 @@ class BarangMasukController extends Controller
      */
     public function index(): JsonResponse
     {
-        $barang_masuk = BarangMasuk::paginate(10);
-        return ResponseFormatter::success($barang_masuk);
+        $barang_keluar = BarangKeluar::paginate(10);
+        return ResponseFormatter::success($barang_keluar);
     }
 
     /**
@@ -35,14 +33,14 @@ class BarangMasukController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $filter = $request->only('dari', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
+        $filter = $request->only('kepada', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
 
         if (count($request->input('barang_id')) !== count($request->input('jumlah'))) {
             return ResponseFormatter::error('Tipe barang dan jumlah barang tidak sama');
         }
 
         $validator = Validator::make($filter, [
-            'dari' => 'required',
+            'kepada' => 'required',
             'no_faktur' => 'required',
             'resi_img' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
             "barang_id" => "required|array",
@@ -65,8 +63,8 @@ class BarangMasukController extends Controller
         $tujuan_upload = 'a930f5a435d7dfacf3ab12e3b5539cbf1c1ad81d'; //sha1 dari faktur_images
         $file->move($tujuan_upload, $nama_file);
 
-        $barang_masuk = BarangMasuk::create([
-            'dari' => $filter['dari'],
+        $barang_keluar = BarangKeluar::create([
+            'kepada' => $filter['kepada'],
             'no_faktur' => $filter['no_faktur'],
             'resi_img' => $nama_file,
         ]);
@@ -74,21 +72,23 @@ class BarangMasukController extends Controller
         for ($i = 0; $i < count($request->input('barang_id')); $i++) {
             try {
                 $barang = Barang::findOrFail($request->input('barang_id')[$i]);
-                $barang_masuk_detail = BarangMasukDetail::create([
-                    'barang_masuk_id' => $barang_masuk->id,
+                if ($barang->stok < $request->input('jumlah')[$i]) {
+                    return ResponseFormatter::error('Stok barang ' . $barang->nama_barang . ' tidak mencukupi');
+                }
+                $barang_keluar_detail = BarangKeluarDetail::create([
+                    'barang_keluar_id' => $barang_keluar->id,
                     'barang_id' => $request->input('barang_id')[$i],
                     'jumlah' => $request->input('jumlah')[$i],
                 ]);
 
-                $barang->update([
-                    'stok' => $barang->stok + $request->input('jumlah')[$i],
-                ]);
+                $barang->stok -= $request->input('jumlah')[$i];
+                $barang->save();
             } catch (Exception $e) {
                 return ResponseFormatter::error(__LINE__, 500, $e->getMessage());
             }
         }
 
-        return ResponseFormatter::success([$barang_masuk, $barang_masuk_detail]);
+        return ResponseFormatter::success([$barang_keluar, $barang_keluar_detail]);
     }
 
     /**
@@ -100,19 +100,19 @@ class BarangMasukController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $barang_masuk = BarangMasuk::findOrFail($id);
-        $barang_masuk_detail = BarangMasukDetail::with('barang')->where('barang_masuk_id', $id)->get();
+        $barang_keluar = BarangKeluar::findOrFail($id);
+        $barang_keluar_detail = BarangKeluarDetail::with('barang')->where('barang_keluar_id', $id)->get();
 
         $data = [
-            'barang_masuk' => $barang_masuk,
-            'barang_masuk_detail' => $barang_masuk_detail,
+            'barang_keluar' => $barang_keluar,
+            'barang_keluar_detail' => $barang_keluar_detail,
         ];
         return ResponseFormatter::success($data);
     }
 
     /**
      * Update the specified resource in storage.
-     * ini belum 100% fixed, skip dulu karena waktu nya mepet, mungkin after akan saya perbaiki
+     * ini belum 100% fixed, skip dulu karena waktu nya mepet, mungkin after akan saya perbaiki.
      *
      * @param Request $request
      * @param int     $id
@@ -121,17 +121,15 @@ class BarangMasukController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $barang_masuk = BarangMasuk::findOrFail($id);
-        $filter = $request->only('dari', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
-
-        return ResponseFormatter::success($request->input('barang_id'));
+        $barang_keluar = BarangKeluar::findOrFail($id);
+        $filter = $request->only('kepada', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
 
         if (count($request->input('barang_id')) !== count($request->input('jumlah'))) {
             return ResponseFormatter::error('Tipe barang dan jumlah barang tidak sama');
         }
 
         $validator = Validator::make($filter, [
-            'dari' => 'required',
+            'kepada' => 'required',
             'no_faktur' => 'required',
             'resi_img' => 'file|image|mimes:jpeg,png,jpg|max:2048',
             "barang_id" => "required|array",
@@ -146,7 +144,7 @@ class BarangMasukController extends Controller
         }
 
         $to_be_updated = [
-            'dari' => $filter['dari'],
+            'kepada' => $filter['kepada'],
             'no_faktur' => $filter['no_faktur'],
         ];
 
@@ -159,25 +157,24 @@ class BarangMasukController extends Controller
             // isi dengan nama folder tempat kemana file diupload
             $tujuan_upload = 'a930f5a435d7dfacf3ab12e3b5539cbf1c1ad81d'; //sha1 dari faktur_images
             $file->move($tujuan_upload, $nama_file);
-            unlink(public_path() . $tujuan_upload . $barang_masuk->resi_img);
+            unlink(public_path() . $tujuan_upload . $barang_keluar->resi_img);
         }
 
 
-        $barang_masuk->update($to_be_updated);
+        $barang_keluar->update($to_be_updated);
 
         for ($i = 0; $i < count($request->input('barang_id')); $i++) {
             try {
                 $barang = Barang::findOrFail($request->input('barang_id')[$i]);
-
-                $barang_masuk_detail = BarangMasukDetail::where([
-                    'barang_masuk_id' => $barang_masuk->id,
+                $barang_keluar_detail = BarangKeluarDetail::where([
+                    'barang_keluar_id' => $barang_keluar->id,
                     'barang_id' => $request->input('barang_id')[$i],
                 ])->first();
                 $barang->update([
-                    'stok' => ($barang->stok - $barang_masuk_detail->jumlah) + $request->input('jumlah')[$i],
+                    'stok' => ($barang->stok + $barang_keluar_detail->jumlah) - $request->input('jumlah')[$i],
                 ]);
 
-                $barang_masuk_detail->update([
+                $barang_keluar_detail->update([
                     'jumlah' => $request->input('jumlah')[$i],
                 ]);
             } catch (Exception $e) {
@@ -185,19 +182,20 @@ class BarangMasukController extends Controller
             }
         }
 
-        return ResponseFormatter::success($barang_masuk, $barang_masuk_detail);
+        return ResponseFormatter::success($barang_keluar, $barang_keluar_detail);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
+     * mungkin ini belum 100% fixed, skip dulu karena waktu nya mepet, mungkin after akan saya perbaiki.
      *
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
-        BarangMasuk::destroy($id);
+        BarangKeluar::destroy($id);
         return ResponseFormatter::success(true);
     }
 }
