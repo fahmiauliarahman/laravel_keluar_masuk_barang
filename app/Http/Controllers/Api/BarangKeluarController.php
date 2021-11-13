@@ -157,9 +157,8 @@ class BarangKeluarController extends Controller
             // isi dengan nama folder tempat kemana file diupload
             $tujuan_upload = 'a930f5a435d7dfacf3ab12e3b5539cbf1c1ad81d'; //sha1 dari faktur_images
             $file->move($tujuan_upload, $nama_file);
-            unlink(public_path() . $tujuan_upload . $barang_keluar->resi_img);
+            unlink(public_path() . '/' . $tujuan_upload . '/' . $barang_keluar->resi_img);
         }
-
 
         $barang_keluar->update($to_be_updated);
 
@@ -182,7 +181,7 @@ class BarangKeluarController extends Controller
             }
         }
 
-        return ResponseFormatter::success($barang_keluar, $barang_keluar_detail);
+        return ResponseFormatter::success([$barang_keluar, $barang_keluar_detail]);
     }
 
     /**

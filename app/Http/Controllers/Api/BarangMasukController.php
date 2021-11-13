@@ -122,8 +122,9 @@ class BarangMasukController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $barang_masuk = BarangMasuk::findOrFail($id);
-
         $filter = $request->only('dari', 'no_faktur', 'resi_img', 'barang_id', 'jumlah');
+
+        return ResponseFormatter::success($filter);
 
         if (count($request->input('barang_id')) !== count($request->input('jumlah'))) {
             return ResponseFormatter::error('Tipe barang dan jumlah barang tidak sama');
@@ -158,7 +159,7 @@ class BarangMasukController extends Controller
             // isi dengan nama folder tempat kemana file diupload
             $tujuan_upload = 'a930f5a435d7dfacf3ab12e3b5539cbf1c1ad81d'; //sha1 dari faktur_images
             $file->move($tujuan_upload, $nama_file);
-            unlink(public_path() . $tujuan_upload . $barang_masuk->resi_img);
+            unlink(public_path() . '/' . $tujuan_upload . '/' . $barang_masuk->resi_img);
         }
 
 
@@ -184,7 +185,7 @@ class BarangMasukController extends Controller
             }
         }
 
-        return ResponseFormatter::success($barang_masuk, $barang_masuk_detail);
+        return ResponseFormatter::success([$barang_masuk, $barang_masuk_detail]);
     }
 
     /**
