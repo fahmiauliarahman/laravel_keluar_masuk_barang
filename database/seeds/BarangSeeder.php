@@ -15,7 +15,7 @@ class BarangSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             Barang::create([
                 'kode_barang' => $faker->ean13(),
                 'nama_barang' => $faker->text(50),
