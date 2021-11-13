@@ -19,10 +19,15 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => 'jwt.verify'], function () {
         Route::post('logout', 'Api\AuthController@logout');
         Route::post('me', 'Api\AuthController@me');
-        Route::resource('kategori', 'Api\KategoriController')->except(['create', 'edit']);
-        Route::resource('barang', 'Api\BarangController')->except(['create', 'edit']);
+
+//        kenapa ditaro disiini, karena mungkin di frontend nanti, si gudang membutuhlkan list of data barang dan data kategori
+        Route::get('barang', 'Api\BarangController@index')->name('barang.index');
+        Route::get('kategori', 'Api\KategoriController@index')->name('kategori.index');
+
         Route::group(['middleware' => 'has_role:1'], function () {
             Route::post('laporan', 'Api\LaporanController@report')->name('reporting');
+            Route::resource('kategori', 'Api\KategoriController')->except(['create', 'edit', 'index']);
+            Route::resource('barang', 'Api\BarangController')->except(['create', 'edit', 'index']);
         });
         Route::group(['middleware' => 'has_role:2'], function () {
             Route::resource('barang_masuk', 'Api\BarangMasukController')->except(['create', 'edit']);
