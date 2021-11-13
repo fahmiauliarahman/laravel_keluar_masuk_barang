@@ -9,10 +9,11 @@
 2. Clone the repository
 3. Run `composer install`
 4. setup your environment variables
-5. Run `php artisan jwt:secret`
-6. Run `php artisan migrate --seed`
-7. Run `php artisan serve`
-8. For API Documentation, click the button below.
+5. Run `php artisan key:generate --ansi`
+6. Run `php artisan jwt:secret`
+7. Run `php artisan migrate --seed`
+8. Run `php artisan serve`
+9. For API Documentation, click the button below.
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/14533445-8420cef4-fed2-4897-8868-2183516f9665?action=collection%2Ffork&collection-url=entityId%3D14533445-8420cef4-fed2-4897-8868-2183516f9665%26entityType%3Dcollection%26workspaceId%3D08a1005f-3f98-4048-b3cb-ec77bef8d7dd)
 
